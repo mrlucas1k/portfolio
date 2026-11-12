@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pekáreň Háj – pekáreň a kaviareň v Petržalke</title>
+<meta name="description" content="Pekáreň Háj na Gessayovej 9 v Petržalke. Škoricové slimáky, posúch, briošky, croissanty, chlebík a dobrá káva. Na mieste, so sebou aj s rozvozom.">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0d0c;
+    --ink-2:#1b1a18;
+    --paper:#f3f1ea;
+    --stone:#d8d8d4;
+    --muted:#8d8a83;
+    --yolk:#f8c800;
+    --crust:#c8742c;
+    --line:rgba(14,13,12,.14);
+    --line-dark:rgba(243,241,234,.16);
+    --display:"Special Elite", "Courier New", monospace;
+    --sans:"Instrument Sans", system-ui, sans-serif;
+    --wrap:min(1180px, calc(100% - 32px));
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  .wrap{width:var(--wrap);margin-inline:auto}
+  .display{font-family:var(--display);font-weight:400;letter-spacing:-.01em;line-height:1.02}
+  .kicker{font-family:var(--display);font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.6em}
+  .kicker::before{content:"";width:28px;height:2px;background:var(--yolk)}
+
+  /* grain – ošúchaná textúra ako v logu */
+  .grain{position:relative;isolation:isolate}
+  .grain::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.09;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* ---------- NAV ---------- */
+  .nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .35s, box-shadow .35s, padding .35s;padding:18px 0}
+  .nav.scrolled{background:rgba(14,13,12,.92);backdrop-filter:blur(10px);padding:10px 0;box-shadow:0 1px 0 var(--line-dark)}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--paper)}
+  .brand img{width:46px;height:46px;border-radius:50%;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .brand:hover img{transform:rotate(-12deg)}
+  .brand span{font-family:var(--display);font-size:1.15rem}
+  .nav ul{display:flex;gap:30px;list-style:none}
+  .nav ul a{color:var(--stone);text-decoration:none;font-size:.95rem;position:relative}
+  .nav ul a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;background:var(--yolk);transition:right .3s}
+  .nav ul a:hover{color:var(--paper)}
+  .nav ul a:hover::after{right:0}
+  .nav-cta{display:flex;align-items:center;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font:600 .95rem/1 var(--sans);text-decoration:none;border:2px solid transparent;transition:transform .2s, background .2s, color .2s, border-color .2s;cursor:pointer}
+  .btn:focus-visible,.nav ul a:focus-visible,.menu-btn:focus-visible{outline:3px solid var(--yolk);outline-offset:3px}
+  .btn-yolk{background:var(--yolk);color:var(--ink)}
+  .btn-yolk:hover{transform:translateY(-2px);background:#ffd633}
+  .btn-ghost{border-color:var(--line-dark);color:var(--paper)}
+  .btn-ghost:hover{border-color:var(--paper)}
+  .btn-ink{background:var(--ink);color:var(--paper)}
+  .btn-ink:hover{transform:translateY(-2px);background:#000}
+  .btn svg{width:18px;height:18px}
+  .menu-btn{display:none;background:none;border:0;color:var(--paper);width:44px;height:44px;cursor:pointer}
+  .menu-btn svg{width:26px;height:26px}
+
+  /* ---------- HERO ---------- */
+  .hero{background:var(--ink);color:var(--paper);min-height:100svh;display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+  .hero h1{font-size:clamp(2.6rem,5.4vw,4.9rem);margin:22px 0 26px}
+  .hero h1 .line{display:block;overflow:hidden}
+  .hero h1 .line > span{display:inline-block;transform:translateY(105%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero h1 .line:nth-child(2) > span{animation-delay:.12s}
+  .hero h1 .line:nth-child(3) > span{animation-delay:.24s}
+  .hero h1 em{font-style:normal;color:var(--yolk)}
+  @keyframes rise{to{transform:none}}
+  .hero p.lead{font-size:1.15rem;color:var(--stone);max-width:31ch;margin-bottom:34px}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:44px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:28px;align-items:center;padding-top:26px;border-top:1px solid var(--line-dark);max-width:520px}
+  .rating{display:flex;align-items:center;gap:12px;text-decoration:none}
+  .rating b{font-family:var(--display);font-size:2rem;font-weight:400;line-height:1}
+  .stars{color:var(--yolk);letter-spacing:2px;font-size:.95rem}
+  .rating small{display:block;color:var(--muted);font-size:.85rem}
+  .status{display:flex;align-items:center;gap:10px;font-size:.95rem;color:var(--stone)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:none}
+  .dot.open{background:#5fd068;box-shadow:0 0 0 0 rgba(95,208,104,.6);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(95,208,104,0)}100%{box-shadow:0 0 0 0 rgba(95,208,104,0)}}
+
+  .hero-visual{position:relative;aspect-ratio:1;width:min(100%,520px);justify-self:end}
+  .hero-photo{position:absolute;inset:11%;border-radius:50%;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:72% 30%;transform:scale(1.55);transform-origin:70% 26%;transition:transform 1.2s}
+  .hero-visual:hover .hero-photo img{transform:scale(1.62)}
+  .ring{position:absolute;inset:0;animation:spin 38s linear infinite}
+  .ring text{font-family:var(--display);font-size:15.5px;letter-spacing:5px;fill:var(--stone);text-transform:uppercase}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .stamp{position:absolute;left:-2%;bottom:4%;width:30%;border-radius:50%;box-shadow:0 0 0 6px var(--ink),0 20px 40px rgba(0,0,0,.5);transform:rotate(-10deg)}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee{background:var(--yolk);color:var(--ink);overflow:hidden;padding:18px 0;border-block:2px solid var(--ink)}
+  .marquee-track{display:flex;width:max-content;animation:slide 32s linear infinite}
+  .marquee span{font-family:var(--display);font-size:clamp(1.3rem,2.4vw,1.9rem);white-space:nowrap;display:flex;align-items:center}
+  .marquee span::after{content:"";width:34px;height:20px;margin:0 28px;background:currentColor;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 20'%3E%3Cellipse cx='9' cy='10' rx='8' ry='5' transform='rotate(-25 9 10)'/%3E%3Cellipse cx='25' cy='10' rx='8' ry='5' transform='rotate(25 25 10)'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 20'%3E%3Cellipse cx='9' cy='10' rx='8' ry='5' transform='rotate(-25 9 10)'/%3E%3Cellipse cx='25' cy='10' rx='8' ry='5' transform='rotate(25 25 10)'/%3E%3C/svg%3E") center/contain no-repeat}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:clamp(80px,11vw,150px) 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:60px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(2.3rem,5vw,4.2rem);margin-top:16px;max-width:14ch}
+  .sec-head p{max-width:38ch;color:#4a4843}
+
+  /* Ponuka */
+  .menu-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,6vw,90px);align-items:start}
+  .menu-photo{position:sticky;top:110px}
+  .menu-photo figure{border-radius:200px 200px 18px 18px;overflow:hidden;aspect-ratio:3/4;background:var(--stone)}
+  .menu-photo img{width:100%;height:100%;object-fit:cover}
+  .menu-photo figcaption{margin-top:14px;font-size:.88rem;color:var(--muted);display:flex;justify-content:space-between}
+  .menu-list{list-style:none;border-top:2px solid var(--ink)}
+  .menu-list li{display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--line);transition:padding .35s cubic-bezier(.2,.8,.2,1)}
+  .menu-list li:hover{padding-left:12px}
+  .menu-list .num{font-family:var(--display);color:var(--muted);font-size:.95rem}
+  .menu-list h3{font-family:var(--display);font-weight:400;font-size:clamp(1.45rem,2.4vw,1.95rem);line-height:1.15}
+  .menu-list p{color:#5b5953;font-size:.98rem;margin-top:6px;max-width:44ch}
+  .menu-list .tag{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--yolk);padding:6px 10px;border-radius:999px;white-space:nowrap;align-self:center}
+  .menu-note{margin-top:30px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:#4a4843}
+
+  /* Kaviareň */
+  .cafe{background:var(--ink);color:var(--paper)}
+  .cafe .sec-head p{color:var(--stone)}
+  .cafe-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:auto auto;gap:20px}
+  .cafe-grid figure{overflow:hidden;border-radius:14px;background:var(--ink-2)}
+  .cafe-grid img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+  .cafe-grid figure:hover img{transform:scale(1.05)}
+  .cafe-a{grid-column:1 / 8;grid-row:1 / 3;position:relative}
+  .cafe-a img{position:absolute;inset:0}
+  .cafe-b{grid-column:8 / 13;aspect-ratio:4/3}
+  .cafe-c{grid-column:8 / 13;aspect-ratio:4/3}
+  .perks{display:grid;grid-template-columns:repeat(4,1fr);margin-top:60px;border-top:1px solid var(--line-dark)}
+  .perk{padding:26px 20px 0 0}
+  .perk svg{width:30px;height:30px;color:var(--yolk);margin-bottom:14px}
+  .perk h3{font-family:var(--display);font-weight:400;font-size:1.2rem}
+  .perk p{color:var(--muted);font-size:.92rem;margin-top:4px}
+
+  /* Recenzie */
+  .reviews-top{display:grid;grid-template-columns:auto 1fr;gap:clamp(30px,6vw,90px);align-items:end;margin-bottom:60px}
+  .big-score{font-family:var(--display);font-size:clamp(6rem,15vw,11rem);line-height:.8}
+  .big-score + div .stars{font-size:1.5rem}
+  .reviews-top h2{font-size:clamp(2rem,4.2vw,3.4rem);max-width:16ch;margin:14px 0}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .quote{background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px 30px;display:flex;flex-direction:column;gap:22px;position:relative;transition:transform .35s, box-shadow .35s}
+  .quote:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(14,13,12,.1)}
+  .quote::before{content:"“";font-family:var(--display);font-size:5rem;line-height:.6;color:var(--yolk);height:30px}
+  .quote blockquote{font-size:1.04rem;flex:1}
+  .quote footer{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;border-top:1px solid var(--line);padding-top:16px}
+  .quote footer b{font-weight:600}
+  .quote footer span{color:var(--muted)}
+  .quote footer .stars{color:var(--yolk)}
+  .reviews-cta{margin-top:40px;display:flex;justify-content:center}
+
+  /* Návšteva */
+  .visit{background:var(--ink);color:var(--paper)}
+  .visit-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,6vw,80px);align-items:stretch}
+  .visit h2{font-size:clamp(2.4rem,5vw,4.2rem);margin:16px 0 34px}
+  .hours{list-style:none;border-top:1px solid var(--line-dark);margin-bottom:34px}
+  .hours li{display:flex;justify-content:space-between;padding:13px 4px;border-bottom:1px solid var(--line-dark);color:var(--stone);transition:background .3s}
+  .hours li.closed span:last-child{color:var(--muted)}
+  .hours li.today{color:var(--ink);background:var(--yolk);border-radius:8px;padding-inline:14px;border-color:transparent;font-weight:600}
+  .hours li.today span:last-child{color:var(--ink)}
+  .contact-rows{display:grid;gap:18px;margin-bottom:34px}
+  .contact-rows a,.contact-rows div{display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:var(--paper)}
+  .contact-rows svg{width:22px;height:22px;color:var(--yolk);flex:none;margin-top:3px}
+  .contact-rows small{display:block;color:var(--muted);font-size:.85rem}
+  .contact-rows a:hover strong{text-decoration:underline;text-decoration-color:var(--yolk);text-underline-offset:4px}
+  .map{border-radius:18px;overflow:hidden;min-height:420px;position:relative;background:var(--ink-2)}
+  .map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) contrast(1.05) brightness(.95)}
+  .map-pin{position:absolute;left:18px;bottom:18px;background:var(--paper);color:var(--ink);padding:14px 18px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .map-pin img{width:42px;height:42px;border-radius:50%}
+  .map-pin b{font-family:var(--display);font-weight:400;font-size:1.1rem;display:block}
+  .map-pin small{color:#5b5953}
+
+  footer.site{background:var(--ink);color:var(--muted);border-top:1px solid var(--line-dark);padding:40px 0;font-size:.9rem}
+  footer.site .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  footer.site .brand span{font-size:1rem}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 980px){
+    .hero .wrap{grid-template-columns:1fr;gap:50px}
+    .hero-visual{justify-self:center;width:min(86vw,440px);order:-1}
+    .hero{padding-top:110px}
+    .menu-grid{grid-template-columns:1fr}
+    .menu-photo{position:relative;top:0;max-width:420px}
+    .perks{grid-template-columns:repeat(2,1fr);row-gap:10px}
+    .quotes{grid-template-columns:1fr}
+    .visit-grid{grid-template-columns:1fr}
+  }
+  @media (max-width: 760px){
+    body{font-size:16px}
+    .nav ul{position:fixed;inset:0;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:opacity .3s}
+    .nav ul a{font-family:var(--display);font-size:1.8rem;color:var(--paper)}
+    .nav.open ul{opacity:1;pointer-events:auto}
+    /* backdrop-filter by z fixed menu spravil relatívne k lište */
+    .nav.open{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--ink)}
+    .menu-btn{display:grid;place-items:center;position:relative;z-index:2}
+    .nav-cta .btn{display:none}
+    .hero-visual{order:0}
+    .hero h1{margin-top:16px}
+    .cafe-grid{grid-template-columns:1fr 1fr}
+    .cafe-a{grid-column:1 / 3;grid-row:auto}
+    .cafe-b,.cafe-c{grid-column:auto}
+    .perks{grid-template-columns:1fr 1fr}
+    .reviews-top{grid-template-columns:1fr;gap:10px}
+    .menu-list li{grid-template-columns:40px 1fr}
+    .menu-list .tag{grid-column:2;justify-self:start}
+    .map{min-height:340px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .reveal{opacity:1;transform:none}
+    .hero h1 .line > span{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="brand" aria-label="Pekáreň Háj – na začiatok">
+      <img src="img/logo.png" alt="">
+      <span>Pekáreň Háj</span>
+    </a>
+    <ul id="menu">
+      <li><a href="#ponuka">Ponuka</a></li>
+      <li><a href="#kaviaren">Kaviareň</a></li>
+      <li><a href="#recenzie">Recenzie</a></li>
+      <li><a href="#navsteva">Kde nás nájdete</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-yolk" href="tel:+421940390315">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+        0940 390 315
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Otvoriť menu" aria-expanded="false" aria-controls="menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero grain">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Pekáreň &amp; kaviareň · Petržalka</span>
+      <h1 class="display">
+        <span class="line"><span>Poctivé pečivo,</span></span>
+        <span class="line"><span>dobrá káva</span></span>
+        <span class="line"><span>a&nbsp;<em>chvíľa pokoja.</em></span></span>
+      </h1>
+      <p class="lead">Škoricové slimáky, posúch, briošky a&nbsp;croissanty. Zoberte si ich so sebou, alebo si sadnite na našu terasu.</p>
+      <div class="hero-actions">
+        <a class="btn btn-yolk" href="#navsteva">Kde nás nájdete
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#ponuka">Čo pečieme</a>
+      </div>
+      <div class="hero-meta">
+        <a class="rating" href="#recenzie">
+          <b>4,7</b>
+          <span><span class="stars" aria-hidden="true">★★★★★</span><small>401 recenzií na Google</small></span>
+        </a>
+        <div class="status" id="status"><span class="dot"></span><span>Otváracie hodiny</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <svg class="ring" viewBox="0 0 400 400">
+        <defs><path id="circ" d="M200,200 m-186,0 a186,186 0 1,1 372,0 a186,186 0 1,1 -372,0"/></defs>
+        <text><textPath href="#circ" textLength="1150" lengthAdjust="spacing">Pekáreň Háj · Gessayova 9 · Petržalka · káva &amp; pečivo · </textPath></text>
+      </svg>
+      <div class="hero-photo"><img src="img/brioska-srdce.webp" alt=""></div>
+      <img class="stamp" src="img/logo.png" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Škoricový slimák</span><span>Posúch</span><span>Brioška</span><span>Croissant</span><span>Chlebík</span><span>Škoricové osie hniezdo</span><span>Káva</span>
+    <span>Škoricový slimák</span><span>Posúch</span><span>Brioška</span><span>Croissant</span><span>Chlebík</span><span>Škoricové osie hniezdo</span><span>Káva</span>
+  </div>
+</div>
+
+<!-- PONUKA -->
+<section id="ponuka">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="reveal">
+        <span class="kicker">Z našej pece</span>
+        <h2 class="display">Čo na vás ráno čaká na pulte</h2>
+      </div>
+      <p class="reveal d1">Pečivo, po ktoré si ľudia chodia pravidelne, aj počas prechádzky. Toto najčastejšie spomínajú v recenziách.</p>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-photo reveal">
+        <figure><img src="img/zavinace.webp" alt="Makové a višňové závinové pečivo na pulte" loading="lazy"></figure>
+        <figcaption><span>Čerstvo z pulta</span><span>Gessayova 9</span></figcaption>
+      </div>
+
+      <div>
+        <ul class="menu-list">
+          <li class="reveal"><span class="num">01</span><div><h3>Škoricový slimák</h3><p>Mäkký, voňavý, so škoricou. Najčastejšie chválená vec v našich recenziách.</p></div><span class="tag">Obľúbené</span></li>
+          <li class="reveal"><span class="num">02</span><div><h3>Posúch</h3><p>Jednoduchý a poctivý. Podľa Google jedna z položiek, po ktorej siahate najčastejšie.</p></div><span class="tag">Obľúbené</span></li>
+          <li class="reveal"><span class="num">03</span><div><h3>Brioška</h3><p>Nadýchaná, lesklá, niekedy aj so srdiečkom z maku.</p></div></li>
+          <li class="reveal"><span class="num">04</span><div><h3>Croissant</h3><p>Na rýchle raňajky cestou do práce alebo na prechádzku.</p></div></li>
+          <li class="reveal"><span class="num">05</span><div><h3>Chlebík</h3><p>Na každý deň, na stôl doma aj na desiatu.</p></div></li>
+          <li class="reveal"><span class="num">06</span><div><h3>Škoricové osie hniezdo</h3><p>Pre tých, ktorým jeden slimák nestačí.</p></div></li>
+          <li class="reveal"><span class="num">07</span><div><h3>Zákusky a koláče</h3><p>K poobednej káve, na mieste alebo zabalené so sebou.</p></div></li>
+        </ul>
+        <div class="menu-note reveal">
+          <a class="btn btn-ink" href="tel:+421940390315">Opýtať sa na dnešnú ponuku</a>
+          <span>Na osobu zvyčajne 5 – 10 €</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KAVIAREŇ -->
+<section id="kaviaren" class="cafe grain">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="reveal">
+        <span class="kicker">Kaviareň</span>
+        <h2 class="display">Sadnite si. Nikto sa tu neponáhľa.</h2>
+      </div>
+      <p class="reveal d1">Káva, nealko a niečo sladké. Vnútri je svetlo a pokoj, vonku malá terasa medzi domami. Presne na zastávku po prechádzke.</p>
+    </div>
+
+    <div class="cafe-grid">
+      <figure class="cafe-a reveal"><img src="img/kaviaren.webp" alt="Interiér kaviarne Pekáreň Háj so stolmi a pultom" loading="lazy"></figure>
+      <figure class="cafe-b reveal d1"><img src="img/briosky-logo.jpg" alt="Briošky so sezamom a makom s logom Pekárne Háj" loading="lazy"></figure>
+      <figure class="cafe-c reveal d2"><img src="img/brioska-burger.webp" alt="Brioškový burger so syrom a pečenými zemiakmi" loading="lazy"></figure>
+    </div>
+
+    <div class="perks">
+      <div class="perk reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10h14v4a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M7 3v3M11 3v3"/></svg><h3>Na mieste</h3><p>Dnu aj na terase</p></div>
+      <div class="perk reveal d1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8h12l-1 13H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><h3>So sebou</h3><p>Zabalíme na cestu</p></div>
+      <div class="perk reveal d2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><h3>Rozvoz</h3><p>Až k vám domov</p></div>
+      <div class="perk reveal d3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8"/><path d="M12 7v6h5l2 6M12 13a5 5 0 1 0 4 7"/></svg><h3>Bezbariérovo</h3><p>Vstup bez schodov</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- RECENZIE -->
+<section id="recenzie">
+  <div class="wrap">
+    <div class="reviews-top">
+      <div class="big-score display reveal">4,7</div>
+      <div class="reveal d1">
+        <span class="stars" aria-label="Hodnotenie 4,7 z 5">★★★★★</span>
+        <h2 class="display">Čo o nás píšu ľudia z okolia</h2>
+        <p style="color:var(--muted)">401 hodnotení na Google Mapách</p>
+      </div>
+    </div>
+
+    <div class="quotes">
+      <figure class="quote reveal">
+        <blockquote>„Kvalita kávy a pečiva to úplne vynahradí. Škoricové slimáky boli výborné, všetko čerstvé a obsluha milá. Určite sa sem radi vrátime.“</blockquote>
+        <footer><b>Silvia V.</b><span class="stars">★★★★★</span></footer>
+      </figure>
+      <figure class="quote reveal d1">
+        <blockquote>„Pekáreň je na veľmi príjemnom a pokojnom mieste. A výrobky sú TOP! V ponuke je aj skvelá káva, dá sa sedieť vonku aj vnútri.“</blockquote>
+        <footer><b>Peter W.</b><span class="stars">★★★★★</span></footer>
+      </figure>
+      <figure class="quote reveal d2">
+        <blockquote>„Pekárnička s výbornými domácimi výrobkami: slimák, posúch, croissant, chlebík… a kávička. Často berieme so sebou v rámci prechádzky.“</blockquote>
+        <footer><b>Marián S.</b><span class="stars">★★★★★</span></footer>
+      </figure>
+    </div>
+    <div class="reviews-cta reveal">
+      <a class="btn btn-ink" href="https://www.google.com/maps/search/?api=1&amp;query=Pek%C3%A1re%C5%88+H%C3%A1j+Gessayova+9+Bratislava" target="_blank" rel="noopener">Všetky recenzie na Google ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- NÁVŠTEVA -->
+<section id="navsteva" class="visit grain">
+  <div class="wrap visit-grid">
+    <div>
+      <span class="kicker reveal">Príďte na kávu</span>
+      <h2 class="display reveal d1">Tešíme sa na vás na Gessayovej</h2>
+
+      <ul class="hours reveal d2" id="hours">
+        <li data-d="1"><span>Pondelok</span><span>Zatvorené</span></li>
+        <li data-d="2"><span>Utorok</span><span>Zatvorené</span></li>
+        <li data-d="3"><span>Streda</span><span>7:30 – 18:00</span></li>
+        <li data-d="4"><span>Štvrtok</span><span>7:30 – 18:00</span></li>
+        <li data-d="5"><span>Piatok</span><span>7:30 – 18:00</span></li>
+        <li data-d="6"><span>Sobota</span><span>8:30 – 17:00</span></li>
+        <li data-d="0"><span>Nedeľa</span><span>8:30 – 17:00</span></li>
+      </ul>
+
+      <div class="contact-rows reveal">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Pek%C3%A1re%C5%88+H%C3%A1j+Gessayova+9+Bratislava" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span><strong>Gessayova 9, 851 03 Bratislava – Petržalka</strong><small>Navigovať cez Google Mapy</small></span>
+        </a>
+        <a href="tel:+421940390315">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+          <span><strong>0940 390 315</strong><small>Objednávky a dnešná ponuka</small></span>
+        </a>
+      </div>
+      <a class="btn btn-yolk reveal" href="https://www.google.com/maps/dir/?api=1&amp;destination=Pek%C3%A1re%C5%88+H%C3%A1j+Gessayova+9+Bratislava" target="_blank" rel="noopener">Naplánovať trasu
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="map reveal d1">
+      <iframe title="Mapa – Pekáreň Háj, Gessayova 9" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=Pek%C3%A1re%C5%88%20H%C3%A1j%2C%20Gessayova%209%2C%20Bratislava&amp;z=16&amp;output=embed"></iframe>
+      <div class="map-pin"><img src="img/logo.png" alt=""><div><b>Pekáreň Háj</b><small>Gessayova 9, Petržalka</small></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <a href="#top" class="brand"><img src="img/logo.png" alt="" style="width:38px;height:38px"><span>Pekáreň Háj</span></a>
+    <span>Gessayova 9, Bratislava · <a href="tel:+421940390315">0940 390 315</a></span>
+    <span>© <span id="yr">2026</span> Pekáreň Háj</span>
+  </div>
+</footer>
+
+<script>
+  // nav pri scrolle + mobilné menu
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 40);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  const menuBtn = document.getElementById('menuBtn');
+  menuBtn.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  document.querySelectorAll('#menu a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); document.body.style.overflow = '';
+  }));
+
+  // otvorené / zatvorené podľa bratislavského času
+  const HOURS = {0:[510,1020],1:null,2:null,3:[450,1080],4:[450,1080],5:[450,1080],6:[510,1020]};
+  const DAYS = ['v nedeľu','v pondelok','v utorok','v stredu','vo štvrtok','v piatok','v sobotu'];
+  const fmt = m => Math.floor(m/60) + ':' + String(m%60).padStart(2,'0');
+  function bratislavaNow(){
+    const p = new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Bratislava',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    const g = t => p.find(x => x.type === t).value;
+    const d = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday'));
+    return {d, m: (+g('hour') % 24) * 60 + +g('minute')};
+  }
+  function updateStatus(){
+    const {d, m} = bratislavaNow();
+    const h = HOURS[d], el = document.getElementById('status');
+    let open = false, txt;
+    if (h && m >= h[0] && m < h[1]) { open = true; txt = 'Otvorené do ' + fmt(h[1]); }
+    else {
+      for (let i = 0; i < 7; i++) {
+        const nd = (d + i) % 7, nh = HOURS[nd];
+        if (!nh) continue;
+        if (i === 0 && m < nh[0]) { txt = 'Zatvorené · otvárame dnes o ' + fmt(nh[0]); break; }
+        if (i > 0) { txt = 'Zatvorené · otvárame ' + (i === 1 ? 'zajtra' : DAYS[nd]) + ' o ' + fmt(nh[0]); break; }
+      }
+    }
+    el.innerHTML = '<span class="dot' + (open ? ' open' : '') + '"></span><span>' + txt + '</span>';
+    document.querySelectorAll('#hours li').forEach(li => {
+      li.classList.toggle('today', +li.dataset.d === d);
+      li.classList.toggle('closed', !HOURS[+li.dataset.d]);
+    });
+  }
+  updateStatus(); setInterval(updateStatus, 60000);
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // reveal pri scrolle
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), {threshold:.15, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

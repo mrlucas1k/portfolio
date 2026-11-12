@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 126" fill="currentColor" role="img" aria-label="MK PNEU s.r.o.">
+  <!-- Vektorová prekresba loga MK PNEU (pôvodne obr/logo1.jpg, 310×160 px) -->
+  <!-- dezén pneumatiky 3×3 -->
+  <path d="M3 2h18q-2 16 0 32H3q-2-16 0-32ZM25 2h18q-2 16 0 32H25q-2-16 0-32ZM47 2h18q-2 16 0 32H47q-2-16 0-32Z"/>
+  <path d="M2 38h18q-4 9 0 18H2q-4-9 0-18ZM24 38h18q-4 9 0 18H24q-4-9 0-18ZM46 38h18q-4 9 0 18H46q-4-9 0-18Z"/>
+  <path d="M3 62h18q-2 16 0 32H3q-2-16 0-32ZM25 62h18q-2 16 0 32H25q-2-16 0-32ZM47 62h18q-2 16 0 32H47q-2-16 0-32Z"/>
+  <!-- M + K (spoločný driek) -->
+  <path d="M76 2h18v92H76zM86 2h17l26 92h-18zM135 2h16l-22 92h-18zM148 2h18v92h-18zM200 2h24l-32 38 34 54h-22l-28-42-10 10V46z"/>
+  <text x="231" y="94" font-family="Arial, Helvetica, sans-serif" font-size="15">s.r.o.</text>
+  <!-- PNEU -->
+  <g fill="none" stroke="currentColor" stroke-width="5.5" clip-path="url(#mkpneu-clip)">
+    <path d="M6.75 126V102.75H25.5Q31.25 102.75 31.25 108.1T25.5 113.5H6.75M48.75 126V100l28.5 24V100M122 102.75H92.75v18.5H122M92.75 112H119M132.75 100v13q0 8.25 8.25 8.25h12q8.25 0 8.25-8.25v-13"/>
+  </g>
+  <defs><clipPath id="mkpneu-clip"><rect x="0" y="100" width="272" height="24"/></clipPath></defs>
+</svg>

@@ -1,0 +1,909 @@
+/* =========================================================
+   Lukáš Šatka — portfólio, verzia 2
+   Farby, písmo a prvky ako vo verzii 1 (60 % biela · 30 % čierna · 10 % zlatá).
+   Rozloženie: veľké slovo v pozadí, fotka v oblúku, kartičky vedľa nej.
+   ========================================================= */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f7f6f2;
+  --card: #ffffff;
+  --text: #111111;
+  --muted: #5c5c5c;
+  --faint: #cfcdc6;
+  --line: #e3e3e3;
+  --gold: #d4af37;
+  --gold-text: #8a6a0f;   /* zlatá pre text na bielej (5,1 : 1) */
+  --focus: #8a6a0f;
+  --btn-bg: #111111;
+  --btn-text: #ffffff;
+
+  /* čierne plochy (pás, kontakt) sú čierne v oboch režimoch */
+  --ink: #111111;
+  --ink-text: #f5f5f5;
+  --ink-muted: #a8a8a8;
+  --ink-line: #2c2c2c;
+
+  --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --gutter: 20px;
+  --header-h: 68px;
+  --radius: 10px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --fast: 150ms;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #111111;
+  --surface: #1a1a1a;
+  --card: #1a1a1a;
+  --text: #f5f5f5;
+  --muted: #a8a8a8;
+  --faint: #3a3a3a;
+  --line: #2c2c2c;
+  --gold-text: #d4af37;
+  --focus: #d4af37;
+  --btn-bg: #f5f5f5;
+  --btn-text: #111111;
+  --ink: #1a1a1a;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #111111;
+    --surface: #1a1a1a;
+    --card: #1a1a1a;
+    --text: #f5f5f5;
+    --muted: #a8a8a8;
+    --faint: #3a3a3a;
+    --line: #2c2c2c;
+    --gold-text: #d4af37;
+    --focus: #d4af37;
+    --btn-bg: #f5f5f5;
+    --btn-text: #111111;
+    --ink: #1a1a1a;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Základ ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.625;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 250ms var(--ease), color 250ms var(--ease);
+}
+body.menu-open { overflow: hidden; }
+
+[hidden] { display: none !important; }
+::selection { background: var(--gold); color: #111111; }
+html { accent-color: var(--gold); }
+
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+h1 { font-size: 2.5rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.035em; }
+h2 { font-size: 1.875rem; line-height: 1.2; font-weight: 700; }
+h3 { font-size: 1.3125rem; line-height: 1.285; font-weight: 700; }
+
+.dot { color: var(--gold); }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.eyebrow,
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+}
+.eyebrow { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--gold); }
+.eyebrow .num { color: var(--text); }
+.kicker { color: var(--muted); font-size: 0.75rem; }
+
+.lead { font-size: 1.0625rem; line-height: 1.65; color: var(--muted); max-width: 34rem; }
+
+.placeholder { color: var(--muted); font-style: italic; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px; top: -60px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border-radius: 6px;
+  text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+/* Fokus: obrys 2 px tmavou zlatou (v tmavom režime zlatou) */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Tlačidlá, odkazy, štítky (ako vo verzii 1) ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border: 1.5px solid var(--btn-bg);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--fast) ease, border-color var(--fast) ease, color var(--fast) ease, transform var(--fast) ease;
+}
+.btn-primary { background: var(--btn-bg); color: var(--btn-text); }
+.btn-secondary { background: var(--bg); color: var(--text); border-color: var(--text); }
+.btn:hover { background: var(--gold); border-color: var(--gold); color: #111111; }
+.btn:active { transform: translateY(1px); }
+
+.btn-small {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 0.9375rem;
+  background: transparent;
+  color: var(--ink-text);
+  border-color: var(--ink-line);
+}
+.btn-small .icon { width: 18px; height: 18px; }
+.btn-small.is-done { background: var(--gold); border-color: var(--gold); color: #111111; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  background-position: 0 calc(50% + 0.75em);
+  transition: background-size 200ms var(--ease);
+}
+.link-arrow:hover { background-size: 100% 2px; }
+
+
+/* ---------- Hlavička ---------- */
+
+.site-header { position: sticky; top: 0; z-index: 50; }
+/* Rozmazanie je na pseudo-elemente, aby nerozbilo fixné mobilné menu */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+.site-header.is-scrolled::before { border-bottom-color: var(--line); }
+body.menu-open .site-header::before { background: var(--bg); }
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--header-h);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.nav-list { display: flex; align-items: center; gap: 4px; }
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--muted);
+  transition: color var(--fast) ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 14px; right: 14px; bottom: 8px;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms var(--ease);
+}
+.nav-link:hover,
+.nav-link.is-active { color: var(--text); }
+.nav-link.is-active::after { transform: scaleX(1); }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-left: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--fast) ease;
+}
+.theme-toggle:hover { border-color: var(--gold); }
+.theme-toggle .icon { width: 18px; height: 18px; }
+.icon-sun { display: none; }
+:root[data-theme="dark"] .icon-sun { display: block; }
+:root[data-theme="dark"] .icon-moon { display: none; }
+
+.header-cta { display: flex; align-items: center; gap: 8px; }
+
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.pill-cta > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  transition: background-color var(--fast) ease, color var(--fast) ease;
+}
+.pill-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  transition: transform 300ms var(--ease), background-color var(--fast) ease, color var(--fast) ease;
+}
+.pill-cta:hover > span:first-child,
+.pill-cta:hover .pill-arrow { background: var(--gold); color: #111111; }
+.pill-cta:hover .pill-arrow { transform: rotate(-45deg); }
+
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-right: -12px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.menu-toggle .icon { width: 26px; height: 26px; }
+.menu-line { transition: transform 200ms var(--ease); transform-origin: 12px 12px; }
+.menu-toggle[aria-expanded="true"] .menu-line-1 { transform: translateY(4px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-line-2 { transform: translateY(-4px) rotate(-45deg); }
+
+.progress {
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--gold);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+}
+
+/* ---------- Úvod ---------- */
+
+.hero { position: relative; overflow: hidden; padding-top: 12px; }
+
+.hero-grid { position: relative; display: grid; gap: 28px; padding-bottom: 48px; }
+
+/* Fotka v oblúku so zlatým okrajom; za ňou slovo a jemná žiara */
+.hero-portrait {
+  position: relative;
+  isolation: isolate;
+  justify-self: center;
+  width: min(56vw, 240px);
+  margin-top: clamp(48px, 14vw, 88px);
+}
+
+/* Obrovské slovo leží za hornou tretinou oblúka */
+.hero-word {
+  position: absolute;
+  z-index: -2;
+  top: -14%;
+  left: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+  user-select: none;
+}
+.hero-word span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 21vw, 13rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--text) 7%, var(--bg));
+  will-change: transform;
+}
+
+.hero-portrait::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: -12%;
+  width: 150%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(212 175 55 / 0.22) 0%, rgb(212 175 55 / 0.08) 38%, transparent 65%);
+  pointer-events: none;
+}
+
+.arch {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 999px 999px 24px 24px;
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--gold), 0 0 0 10px var(--bg), 0 0 0 11px var(--line);
+}
+.arch img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.arch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(212 175 55 / 0.45) 0%, transparent 38%);
+  pointer-events: none;
+}
+
+/* text a kartičky ležia nad veľkým slovom, ktoré patrí k fotke */
+.hero-copy,
+.hero-cards { position: relative; z-index: 1; }
+.hero-copy h1 { margin-bottom: 20px; }
+h1 .line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+h1 .line > span { display: inline-block; }
+
+.highlight {
+  color: var(--gold-text);
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 100% 0.09em;
+}
+
+.actions { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+
+/* Kartičky vedľa fotky: plné, bez skla a plávajúceho tieňa */
+.hero-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hero-card {
+  display: grid;
+  gap: 2px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero-card strong { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+.card-meta { font-size: 0.8125rem; color: var(--muted); }
+
+/* ---------- Pás so zameraním (posúva sa so stránkou, sám od seba stojí) ---------- */
+
+.marquee { overflow: hidden; padding: 22px 0; background: var(--ink); color: var(--ink-text); }
+.marquee-track { display: flex; width: max-content; will-change: transform; }
+.marquee-group { display: flex; align-items: center; flex: none; gap: 32px; padding-right: 32px; }
+.marquee span {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1rem + 3vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.marquee .outline { color: transparent; -webkit-text-stroke: 1.5px var(--ink-text); }
+.marquee i { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); }
+
+/* ---------- Sekcie ---------- */
+
+.section { padding: 80px 0; }
+.section-tinted { background: var(--surface); }
+.section-head { display: grid; gap: 0; margin-bottom: 36px; }
+.section-lead { max-width: 38rem; margin-top: 16px; color: var(--muted); font-size: 1.0625rem; }
+
+/* Projekty */
+.work-grid { display: grid; gap: 20px; }
+
+.work {
+  position: relative;
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  cursor: pointer;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.work:hover {
+  border-color: color-mix(in srgb, var(--gold) 70%, var(--line));
+  box-shadow: 0 18px 36px -24px rgb(17 17 17 / 0.35);
+}
+
+.work-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.work-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 700ms var(--ease);
+}
+.work:hover .work-media img { transform: scale(1.03); }
+
+.work-info {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 16px;
+  padding: 24px 20px;
+}
+.work-text { display: grid; gap: 8px; }
+.work-text > p { color: var(--muted); }
+.work-meta { display: flex; align-items: center; gap: 12px; }
+.work-features {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.badge-new {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #111111;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.spec { display: grid; gap: 10px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
+.spec div { display: grid; gap: 2px; }
+.spec dt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.spec dd { font-weight: 500; }
+
+/* Šípka je len na kartách, ktoré naozaj niekam vedú */
+.round-link {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  transition: background-color var(--fast) ease, color var(--fast) ease, transform 400ms var(--ease);
+}
+.work:hover .round-link { background: var(--gold); color: #111111; transform: rotate(45deg); }
+
+/* Celá karta je odkaz: odkaz v nadpise sa roztiahne cez kartu */
+.work-link { color: inherit; text-decoration: none; }
+.work-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.work-link:focus-visible { outline: none; }
+.work:has(.work-link:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* O mne */
+.about-grid { display: grid; gap: 32px; }
+.skills {
+  max-width: 22rem;
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 2.2vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  max-width: 28ch;
+}
+.statement .w { color: var(--faint); transition: color 350ms ease; }
+.statement .w.on { color: var(--text); }
+
+.steps-title { margin-top: 56px; font-size: 1.125rem; }
+.steps { display: grid; gap: 0; margin-top: 16px; border-top: 1px solid var(--line); }
+.step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.step-num {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--gold-text);
+}
+.step strong { font-family: var(--font-display); font-size: 1.125rem; letter-spacing: -0.015em; }
+.step p { margin-top: 2px; color: var(--muted); }
+
+/* Kontakt: čierna karta */
+.contact-card {
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+  border: 1px solid var(--ink-line);
+  border-radius: 24px;
+  background: var(--ink);
+  color: var(--ink-text);
+  --text: var(--ink-text);
+  --muted: var(--ink-muted);
+  --line: var(--ink-line);
+  --gold-text: #d4af37;
+  --focus: #d4af37;
+}
+.contact-card::after {
+  content: "";
+  position: absolute;
+  right: -18%;
+  top: -40%;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid rgb(212 175 55 / 0.35);
+  box-shadow: 0 0 0 48px rgb(212 175 55 / 0.04);
+  pointer-events: none;
+}
+.contact-card h2 { margin-bottom: 16px; }
+.contact-lead { max-width: 34rem; color: var(--ink-muted); font-size: 1.0625rem; }
+
+.contact-list { position: relative; z-index: 1; margin-top: 32px; border-top: 1px solid var(--ink-line); }
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "label action" "value action";
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 2px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--ink-line);
+}
+.contact-label {
+  grid-area: label;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.contact-value {
+  grid-area: value;
+  justify-self: start;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  overflow-wrap: anywhere;
+  transition: text-decoration-color 200ms ease;
+}
+.contact-value:hover { text-decoration-color: #d4af37; }
+.contact-row .btn,
+.contact-icon { grid-area: action; }
+.contact-icon { color: #d4af37; width: 22px; height: 22px; }
+
+/* Päta */
+.site-footer { border-top: 1px solid var(--line); }
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 80px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.site-footer .link-arrow { font-size: 0.875rem; }
+.site-footer .link-arrow .icon { width: 16px; height: 16px; transition: transform var(--fast) ease; }
+.site-footer .link-arrow:hover .icon { transform: translateY(-3px); }
+
+/* ---------- Animácie ---------- */
+
+.js h1 .line > span { transform: translateY(110%); animation: line-up 900ms var(--ease) 250ms forwards; }
+.js h1 .line:nth-child(2) > span { animation-delay: 350ms; }
+.js h1 .line:nth-child(3) > span { animation-delay: 450ms; }
+.js .highlight { background-size: 0% 0.09em; animation: underline 700ms var(--ease) 1100ms forwards; }
+.js .hero .eyebrow,
+.js .hero .lead,
+.js .hero .actions,
+.js .hero-card { animation: rise 800ms var(--ease) both; }
+.js .hero .eyebrow { animation-delay: 150ms; }
+.js .hero .lead { animation-delay: 600ms; }
+.js .hero .actions { animation-delay: 720ms; }
+.js .hero-card:nth-child(1) { animation-delay: 820ms; }
+.js .hero-card:nth-child(2) { animation-delay: 920ms; }
+
+/* Fotka sa v zlatom ráme odkryje zospodu, žiara za ňou pomaly dýcha.
+   Animuje sa len obrázok – clip-path na .arch by orezal aj zlatý rám. */
+.js .arch img { animation: wipe-up 1100ms var(--ease) 100ms both, photo-in 1400ms var(--ease) 100ms both; }
+.js .hero-portrait::before { animation: glow 6s ease-in-out 1.2s infinite alternate both; }
+
+@keyframes line-up { to { transform: none; } }
+@keyframes underline { to { background-size: 100% 0.09em; } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes wipe-up { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes photo-in { from { transform: scale(1.2); } }
+@keyframes glow { from { opacity: 0.6; scale: 0.94; } to { opacity: 1; scale: 1.04; } }
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.js .reveal.is-visible { opacity: 1; transform: none; }
+
+/* =========================================================
+   Mobil (pod 760 px)
+   ========================================================= */
+
+@media (max-width: 759.98px) {
+  .pill-cta { display: none; }
+  .menu-toggle { display: inline-flex; }
+
+  .nav-list {
+    position: fixed;
+    inset: var(--header-h) 0 0 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 16px var(--gutter) calc(24px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 200ms ease, transform 200ms var(--ease), visibility 0s linear 200ms;
+  }
+  .nav-list.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: opacity 200ms ease, transform 200ms var(--ease), visibility 0s;
+  }
+  .nav-link {
+    display: flex;
+    min-height: 64px;
+    padding: 0;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-link::after { left: 0; right: auto; width: 40px; bottom: 14px; }
+  .nav-theme { margin-top: auto; }
+  .theme-toggle { width: 100%; justify-content: center; min-height: 52px; margin-left: 0; }
+
+  .actions .btn { width: 100%; }
+}
+
+/* =========================================================
+   Tablet a viac (od 760 px)
+   ========================================================= */
+
+@media (min-width: 760px) {
+  :root { --gutter: 32px; --header-h: 76px; }
+
+  body { font-size: 1.0625rem; line-height: 1.647; }
+  h1 { font-size: clamp(3.25rem, 6.4vw, 4.5rem); line-height: 1.03; }
+  h2 { font-size: clamp(2.25rem, 3.6vw, 2.625rem); line-height: 1.14; }
+  h3 { font-size: 1.5rem; line-height: 1.25; }
+
+  /* Ikona namiesto textu: hlavička má menej rovnocenných volieb */
+  .theme-toggle { width: 44px; padding: 0; justify-content: center; }
+  .theme-label { display: none; }
+
+  .hero-portrait { width: 320px; }
+  .hero-cards { max-width: 560px; }
+  .actions { flex-direction: row; flex-wrap: wrap; }
+
+  .section { padding: 112px 0; }
+  .section-head { margin-bottom: 48px; }
+
+  .about-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 56px; }
+  .about-side { align-self: start; position: sticky; top: calc(var(--header-h) + 32px); }
+
+  .work-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .work-wide,
+  .work:last-child { grid-column: 1 / -1; }
+  .work-info { padding: 28px; }
+
+  .contact-card { padding: 72px 56px; border-radius: 32px; }
+  .contact-row {
+    grid-template-columns: 120px 1fr auto;
+    grid-template-areas: "label value action";
+    min-height: 76px;
+    padding: 12px 0;
+  }
+}
+
+/* Desktop: text vľavo, oblúk v strede, kartičky vpravo */
+@media (min-width: 1025px) {
+  :root { --gutter: 40px; }
+
+  .hero { padding-top: 20px; }
+  .hero-grid {
+    /* rovnako široké bočné stĺpce = fotka presne v strede */
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px) minmax(0, 1fr);
+    align-items: end;
+    gap: 40px;
+    padding-bottom: 0;
+  }
+  .hero-portrait { grid-column: 2; grid-row: 1; width: 100%; margin-top: 150px; }
+  .hero-word { top: -26%; }
+  .arch { border-radius: 999px 999px 0 0; box-shadow: 0 0 0 4px var(--gold), 0 0 0 16px var(--bg), 0 0 0 17px var(--line); }
+  .hero-copy { grid-column: 1; grid-row: 1; padding-bottom: 72px; }
+  .hero-copy h1 { font-size: clamp(2.5rem, 3.6vw, 3.5rem); }
+  .hero-copy h1 .line > span { white-space: nowrap; }
+  .hero-copy .lead { font-size: 1rem; }
+  .hero-cards {
+    grid-column: 3;
+    grid-row: 1;
+    grid-template-columns: 1fr;
+    align-self: end;
+    justify-self: end;
+    width: 100%;
+    max-width: 280px;
+    padding-bottom: 72px;
+  }
+  .hero-card { padding: 20px; }
+  .hero-card strong { font-size: 1.25rem; }
+
+  /* Hlavný projekt cez celú šírku, ostatné v troch stĺpcoch */
+  .work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .work:last-child { grid-column: auto; }
+  .work-wide { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  /* snímka vyplní celú výšku karty, bez prázdneho pásu pod ňou */
+  .work-wide .work-media { aspect-ratio: auto; min-height: 340px; border-bottom: 0; border-right: 1px solid var(--line); }
+  .work-wide .work-media img { position: absolute; inset: 0; }
+  .work-wide .work-info { padding: 40px; align-self: center; }
+  .work-wide .spec div { grid-template-columns: 110px 1fr; align-items: baseline; }
+}
+
+/* Obmedzený pohyb: bez animácií, všetko viditeľné hneď */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js h1 .line > span { transform: none; }
+  .js .highlight { background-size: 100% 0.09em; }
+  .js .reveal { opacity: 1; transform: none; }
+  .statement .w { color: var(--text); }
+}
